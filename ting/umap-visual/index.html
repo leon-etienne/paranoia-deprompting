@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CLIP Token UMAP Visualization</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3fc@14.2.3/build/d3fc.js"></script>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        font-family: sans-serif;
+        user-select: none;
+        color: black;
+        background-color: white;
+      }
+
+      #title {
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      #title .subtitle {
+        margin-right: 20px;
+      }
+
+      #title .subtitle h2 {
+        margin: 5px 0;
+      }
+
+      #search-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: 20px;
+      }
+
+      #search-input {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        max-width: 600px;
+      }
+
+      #search-input:focus {
+        outline: none;
+        border-color: #4CAF50;
+      }
+
+      #search-button {
+        padding: 8px 16px;
+        font-size: 14px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #search-button:hover {
+        background-color: #45a049;
+      }
+
+      #search-help {
+        font-size: 12px;
+        color: #666;
+        margin-left: 10px;
+      }
+
+      #chart-container {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #chart-container > div {
+        position: absolute;
+        top: 0; bottom: 0; right: 0; left: 0;
+      }
+
+      #loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.9);
+        z-index: 10;
+      }
+
+      #loading.hidden {
+        display: none;
+      }
+
+      .lds-ring {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+
+      .lds-ring div {
+        box-sizing: border-box;
+        display: block;
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border: 8px solid #4CAF50;
+        border-radius: 50%;
+        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        border-color: #4CAF50 transparent transparent transparent;
+      }
+
+      .lds-ring div:nth-child(1) {
+        animation-delay: -0.45s;
+      }
+
+      .lds-ring div:nth-child(2) {
+        animation-delay: -0.3s;
+      }
+
+      .lds-ring div:nth-child(3) {
+        animation-delay: -0.15s;
+      }
+
+      @keyframes lds-ring {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      #chart d3fc-group {
+        grid-template-columns: 1em auto 1fr 1em 0;
+        grid-template-rows: 0 auto 1fr 1em 0;
+      }
+
+      .tick text {
+        display: none;
+      }
+
+      #info-panel {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        max-width: 400px;
+        max-height: 300px;
+        overflow-y: auto;
+        display: none;
+      }
+
+      #info-panel.visible {
+        display: block;
+      }
+
+      #info-panel h3 {
+        margin: 0 0 10px 0;
+        font-size: 16px;
+      }
+
+      #info-panel p {
+        margin: 5px 0;
+        font-size: 14px;
+      }
+
+      .highlighted {
+        stroke: #ff0000 !important;
+        stroke-width: 3 !important;
+      }
+
+      .search-result {
+        stroke: #00ff00 !important;
+        stroke-width: 2 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="title">
+      <div class="subtitle">
+        <h2>CLIP Token UMAP Visualization</h2>
+        <small>Interactive token embedding visualization with search</small>
+      </div>
+      <div id="search-container">
+        <input type="text" id="search-input" placeholder="Search by token_id (e.g., 123) or exact token text (e.g., cat, dog) - separate multiple with comma">
+        <button id="search-button">Search</button>
+        <span id="search-help">Exact match; separate multiple with comma</span>
+      </div>
+    </div>
+
+    <div id="chart-container">
+      <div id="chart"></div>
+      <div id="loading">
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+      </div>
+    </div>
+
+    <div id="info-panel">
+      <h3>Token Information</h3>
+      <div id="info-content"></div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>

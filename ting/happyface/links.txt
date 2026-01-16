@@ -1,0 +1,11 @@
+    """
+    https://www.placecage.com/512/512
+
+    https://placekitten.com/512/512
+
+    https://picsum.photos/512/512
+
+    https://thiscatdoesnotexist.com/
+
+    https://thispersondoesnotexist.com/
+    """

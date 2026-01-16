@@ -1,0 +1,6 @@
+pillow
+requests
+transformers
+torch
+numpy
+opencv-python
