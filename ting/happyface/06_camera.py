@@ -6,7 +6,7 @@ from transformers import CLIPProcessor, CLIPModel
 
 # Initialize CLIP model and processor
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", use_fast=True)
 
 # List of food keywords
 food_keywords = [
@@ -32,12 +32,17 @@ food_keywords = [
     "Paella"
 ]
 
-camera = cv2.VideoCapture(0)
+camera_index = 1
+camera = cv2.VideoCapture(camera_index)
 
 # Check if the camera is opened successfully
 if not camera.isOpened():
-    print("Failed to open the camera.")
-    exit()
+    fallback_index = 0
+    camera.release()
+    camera = cv2.VideoCapture(fallback_index)
+    if not camera.isOpened():
+        print(f"Failed to open the camera (tried {camera_index} and {fallback_index}).")
+        exit()
 
 print("Press 'q' to quit the program")
 
@@ -80,8 +85,12 @@ while True:
     draw = ImageDraw.Draw(image)
     normal_font_size = 35
     top_font_size = 45  # Larger font for top 3
-    font = ImageFont.truetype("NotoSans-Regular.ttf", normal_font_size)
-    top_font = ImageFont.truetype("NotoSans-Regular.ttf", top_font_size)
+    try:
+        font = ImageFont.truetype("NotoSans-Regular.ttf", normal_font_size)
+        top_font = ImageFont.truetype("NotoSans-Regular.ttf", top_font_size)
+    except OSError:
+        font = ImageFont.load_default()
+        top_font = ImageFont.load_default()
     
     # Get top 3 indices
     top_count = 3
