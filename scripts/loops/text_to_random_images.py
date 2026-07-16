@@ -9,7 +9,7 @@ from transformers import CLIPModel, CLIPProcessor
 # Change these values, then run the file.
 text = "Programmer"
 iterations = 1000
-image_url = "https://thispersondoesnotexist.com/random-person.jpeg?{i}"
+image_url = "https://thispersondoesnotexist.com/"
 output_dir = Path("outputs/text_loop")
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -25,7 +25,7 @@ output_dir.mkdir(parents=True, exist_ok=True)
 
 for i in range(iterations):
     # Load a fresh random image and score it against the text.
-    image = load_image(image_url.format(i=i)).convert("RGB")
+    image = load_image(image_url).convert("RGB")
     inputs = processor(text=[text], images=image, return_tensors="pt").to(device)
 
     with torch.inference_mode():

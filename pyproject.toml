@@ -49,6 +49,9 @@ all = [
   "jupyterlab>=4",
   "ipywidgets>=8",
   "nbformat>=5.10",
+  "umap-learn>=0.5",
+  "tqdm>=4.66",
+  "opencv-python>=4.9",
 ]
 
 [tool.setuptools.packages.find]
