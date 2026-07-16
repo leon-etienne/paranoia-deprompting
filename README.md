@@ -1,8 +1,6 @@
-# Paranoia De-Prompting: Artistic experiments on generative image
+# Paranoia De-Prompting
 
-Small CLIP, token, SDXL, and image-process experiments for probing how prompts, tokens, images, and repeated transformations drift.
-
-The repo is organized as annotated notebooks plus direct Python scripts. Scripts are intentionally plain: edit the lowercase variables near the top of a file, then run it.
+Self-contained CLIP, token, SDXL, and image-processing experiments. Edit the values near the top of a script, then run it.
 
 ## Install
 
@@ -12,13 +10,12 @@ Use Python 3.10 or newer.
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
-pip install -e .
 pip install -r requirements.txt
 ```
 
 `requirements.txt` includes the CUDA PyTorch wheel index for NVIDIA machines. If you need a different CUDA, CPU, or ROCm build, adjust the PyTorch lines using the selector at <https://pytorch.org/get-started/locally/>.
 
-## Run The Interactive Scripts
+## Interactive Apps
 
 ```bash
 python scripts/clip/app.py
@@ -27,11 +24,7 @@ python scripts/tokens/app.py
 python scripts/evolution/app.py
 ```
 
-To create a public Gradio link, explicitly change `.launch()` to `.launch(share=True)` or set `GRADIO_SHARE=True`. Do not expose an unauthenticated GPU app unless that is intentional.
-
-## Run The Small Experiments
-
-Each script has editable lowercase constants at the top.
+## Small Experiments
 
 ### CLIP Similarity
 
@@ -85,7 +78,7 @@ notebooks/3_Evolution.ipynb
 notebooks/4_Complexity.ipynb
 ```
 
-The uploaded originals are retained under `notebooks/original/`.
+Each notebook contains its own imports and implementation. The uploaded originals are retained under `notebooks/original/`.
 
 ## Hardware Expectations
 
@@ -100,17 +93,7 @@ The uploaded originals are retained under `notebooks/original/`.
 
 The first run downloads model weights from Hugging Face. `stabilityai/sdxl-turbo` may require accepting its model terms and authenticating with `huggingface-cli login` depending on the current Hub policy.
 
-## Repository Map
-
-```text
-notebooks/               Annotated teaching notebooks
-notebooks/original/      Uploaded notebooks, unchanged
-scripts/                 Direct runnable experiments and Gradio launchers
-src/clip_token_lab/      Reusable implementation
-tests/                   Lightweight tests that do not download models
-```
-
-## Important Experimental Assumptions
+## Notes
 
 - Cross-modal image/text ranking uses CLIP's scaled logits followed by softmax over the provided candidate set. These values are relative probabilities within that set, not calibrated real-world probabilities.
 - Text/text and image/image compare normalized embeddings with cosine similarity. Negative similarities are preserved instead of clipped to zero.
@@ -118,10 +101,8 @@ tests/                   Lightweight tests that do not download models
 - SDXL Turbo is designed for very few denoising steps. The defaults here preserve the notebook's experimental settings rather than claiming universal best settings.
 - Repeated blur and sharpen operations do not cancel each other out; the residual changes accumulate into visible drift.
 
-## Development Checks
+## Checks
 
 ```bash
-python -m compileall src scripts
-pytest
-ruff check src scripts tests
+python -m compileall scripts
 ```
