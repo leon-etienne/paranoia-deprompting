@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clip-token-lab"
+version = "0.1.0"
+description = "Artistic experiments on generative image with CLIP, tokens, SDXL, and iterative transformations."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Notebook refactor"}]
+dependencies = [
+  "torch>=2.2",
+  "transformers>=4.40,<6",
+  "numpy>=1.26",
+  "Pillow>=10",
+  "requests>=2.31",
+  "matplotlib>=3.8",
+  "huggingface-hub>=0.23",
+  "safetensors>=0.4",
+]
+
+[project.optional-dependencies]
+ui = [
+  "gradio>=6,<7",
+  "pandas>=2.1",
+]
+sdxl = [
+  "diffusers>=0.30,<1",
+  "accelerate>=0.30,<2",
+  "invisible-watermark>=0.2.0",
+]
+notebooks = [
+  "jupyterlab>=4",
+  "ipywidgets>=8",
+  "nbformat>=5.10",
+]
+dev = [
+  "pytest>=8",
+  "ruff>=0.6",
+  "nbformat>=5.10",
+]
+all = [
+  "gradio>=6,<7",
+  "pandas>=2.1",
+  "diffusers>=0.30,<1",
+  "accelerate>=0.30,<2",
+  "invisible-watermark>=0.2.0",
+  "jupyterlab>=4",
+  "ipywidgets>=8",
+  "nbformat>=5.10",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
